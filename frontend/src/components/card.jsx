@@ -1,9 +1,10 @@
+import {useState, useEffect} from "react";
+
 const parentStyle = {
-    width: "152px",
-    height: "220px",
+    width: "154px",
+    height: "268px",
     padding: "15px",
     margin: "15px",
-    //filter: "drop-shadow(0px 0px 5px #666)",
     backgroundColor: "#fff2eb",
     borderRadius: "4px",
     boxShadow: "4px 4px 4px #efdfd6"
@@ -40,9 +41,22 @@ const cartStyle = {
 }
 
 export const HomeCard = (props) => {
-    const handleCartClick = (id) => {
-        props.addToCart(id);
+    const [cartStatus, setCartStatus] = useState('+ Cart');
+
+    useEffect(() => {
+    if(!localStorage.getItem('username')){
+        setCartStatus('')
     }
+    }, []);
+
+
+    const handleCartClick = (id) => {
+        const isOkay = props.addToCart(id);
+        isOkay ? setCartStatus('Added') : setCartStatus('+ Cart')
+    }
+    const dateObject = new Date(props.product.created);
+    const formattedDate = `${dateObject.getUTCDate()}/${dateObject.getUTCMonth() + 1}/${dateObject.getUTCFullYear()} ${dateObject.getUTCHours()}:${dateObject.getUTCMinutes()}:${dateObject.getUTCSeconds()}`;
+
     return (
         <>
         <div style={parentStyle}>
@@ -50,8 +64,8 @@ export const HomeCard = (props) => {
             <p style={titleStyle} className="fw-semibold">
                 {props.product.name}
             </p>
-            <p style={cartStyle} onClick={() => {handleCartClick(props.product.id)}}>
-                + Cart
+            <p style={cartStatus !== '' ? cartStyle : null} onClick={() => {handleCartClick(props.product.id)}}>
+                {cartStatus}
             </p>
             </div>
             <div className="d-flex justify-content-between">
@@ -65,16 +79,21 @@ export const HomeCard = (props) => {
             <p className="fw-normal" style={descStyle}>
                 {props.product.description}
             </p>
+            <p className="fw-light" style={priceAndUserStyle}>
+                {formattedDate}
+            </p>
         </div>
         </>
   );
 }
 
 export const CartCard = (props) => {
-    console.log(props)
     const handleRemoveClick = (id, updated) => {
         props.removeFromCart(id, updated);
     }
+    const dateObject = new Date(props.product.created);
+    const formattedDate = `${dateObject.getUTCDate()}/${dateObject.getUTCMonth() + 1}/${dateObject.getUTCFullYear()} ${dateObject.getUTCHours()}:${dateObject.getUTCMinutes()}:${dateObject.getUTCSeconds()}`;
+
     return (
         <>
         <div style={parentStyle}>
@@ -96,6 +115,83 @@ export const CartCard = (props) => {
             </div>
             <p className="fw-normal" style={descStyle}>
                 {props.product.product.description}
+            </p>
+            <p className="fw-light" style={priceAndUserStyle}>
+                {formattedDate}
+            </p>
+        </div>
+        </>
+  );
+}
+
+export const MyProductsCard = (props) => {
+    const handleEditClick = (id, updated) => {
+        props.editProduct(id, updated);
+    }
+    const dateObject = new Date(props.product.created);
+    const formattedDate = `${dateObject.getUTCDate()}/${dateObject.getUTCMonth() + 1}/${dateObject.getUTCFullYear()} ${dateObject.getUTCHours()}:${dateObject.getUTCMinutes()}:${dateObject.getUTCSeconds()}`;
+
+    return (
+        <>
+        <div style={parentStyle}>
+            <div>
+            <p style={titleStyle} className="fw-semibold">
+                {props.product.name}
+            </p>
+            <p style={cartStyle} onClick={() => {handleEditClick(props.product.id, props.product.updated)}}>
+                Edit
+            </p>
+            </div>
+            <div className="d-flex justify-content-between">
+            <p className="fw-light" style={priceAndUserStyle}>
+                {props.product.price}€
+            </p>
+            <p className="fw-lighter" style={priceAndUserStyle}>
+                {props.product.owner}
+            </p>
+            </div>
+            <p className="fw-normal" style={descStyle}>
+                {props.product.description}
+            </p>
+            <p className="fw-light" style={priceAndUserStyle}>
+                {props.product.status}
+            </p>
+            <p className="fw-light" style={priceAndUserStyle}>
+                {formattedDate}
+            </p>
+        </div>
+        </>
+  );
+}
+
+export const BoughtCard = (props) => {
+    const dateObject = new Date(props.product.created);
+    const formattedDate = `${dateObject.getUTCDate()}/${dateObject.getUTCMonth() + 1}/${dateObject.getUTCFullYear()} ${dateObject.getUTCHours()}:${dateObject.getUTCMinutes()}:${dateObject.getUTCSeconds()}`;
+
+    return (
+        <>
+        <div style={parentStyle}>
+            <div>
+            <p style={titleStyle} className="fw-semibold">
+                {props.product.product.name}
+            </p>
+            <p style={cartStyle}>
+                BOUGHT
+            </p>
+            </div>
+            <div className="d-flex justify-content-between">
+            <p className="fw-light" style={priceAndUserStyle}>
+                {props.product.product.price}€
+            </p>
+            <p className="fw-lighter" style={priceAndUserStyle}>
+                {props.product.product.owner}
+            </p>
+            </div>
+            <p className="fw-normal" style={descStyle}>
+                {props.product.product.description}
+            </p>
+            <p className="fw-light" style={priceAndUserStyle}>
+                {formattedDate}
             </p>
         </div>
         </>
