@@ -1,6 +1,6 @@
-
-import axios from "axios";
+import api from "../tools/api";
 import {useState, useEffect} from "react";
+import { Error } from "./error";
 
 export const Account = () => {
   if(localStorage.getItem('access_token') == null){
@@ -9,6 +9,9 @@ export const Account = () => {
     const [username, setUsername] = useState('');
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
+
+    const [showError, setShowError] = useState(false)
+    const [errorData, setErrorData] = useState('')
 
     useEffect(() => {
       setUsername(localStorage.getItem('username'))
@@ -23,16 +26,25 @@ export const Account = () => {
             newPassword: newPassword,
           };
 
-        const data = await axios.post('http://localhost:8000/api/password/', user ,{headers: {
-            'Content-Type': 'application/json'
-        }}, {withCredentials: true});
+        api.post('/password/', user).then((resp) => {
+          console.log(resp);
+          if(resp.status == 200){
+            window.location.href = '/'
+          }
+        }).catch((resp) => {
+          console.log(resp)
+          setErrorData(resp.response.data)
+          setShowError(true)
+        })
+    }
 
-        if (data.status === 200) {
-          window.location.href = '/'
-        }
+    const handleCloseModalClick = () => {
+      setShowError(false)
     }
 
     return(
+      <>
+        <Error show={showError} data={errorData} closeClick={handleCloseModalClick}></Error>
         <div className="Auth-form-container">
         <form className="Auth-form" onSubmit={submit}>
           <div className="Auth-form-content">
@@ -80,6 +92,7 @@ export const Account = () => {
             </div>
           </div>
         </form>
-    </div>
+      </div>
+    </>
     )
 }

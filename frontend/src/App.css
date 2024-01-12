@@ -103,7 +103,7 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100vw;
+  /*width: 100vw;*/
   height: 90vh;
 }
 
@@ -133,4 +133,16 @@ label {
   font-size: 14px;
   font-weight: 600;
   color: rgb(34, 34, 34);
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }

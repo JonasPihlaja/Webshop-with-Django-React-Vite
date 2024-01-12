@@ -1,21 +1,11 @@
 import {useEffect, useState} from "react";
-import axios from "axios";
-
+import api from "../tools/api";
 export const Populate = () => {
 
     useEffect(() => {
-        (async () => {
-            try {
-                await axios.post('http://localhost:8000/api/populate/',{
-                } ,{headers: {
-                    'Content-Type': 'application/json'
-                }});
-
-                window.location.href = '/logout'
-            } catch (e) {
-                console.log('populate not working')
-            }
-        })();
+        api.post('populate/').then((resp) => {
+            window.location.href = '/logout'
+        })
     }, []);
     return (
         <div></div>

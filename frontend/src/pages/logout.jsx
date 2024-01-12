@@ -1,25 +1,17 @@
 import {useEffect, useState} from "react";
-import axios from "axios";
+import api from "../tools/api";
 
 export const Logout = () => {
 
     useEffect(() => {
-        (async () => {
-            try {
-                const {data} = await axios.post('http://localhost:8000/api/logout/',{
-                    refresh_token:localStorage.getItem('refresh_token')
-                } ,{headers: {
-                    'Content-Type': 'application/json'
-                }}, {withCredentials: true});
-
-                console.log('logout', data)
-                localStorage.clear();
-                axios.defaults.headers.common['Authorization'] = null;
-                window.location.href = '/'
-            } catch (e) {
-                console.log('logout not working')
-            }
-        })();
+        api.post('logout/', {refresh_token: localStorage.getItem('refresh_token')}).then((resp) => {
+            localStorage.clear()
+            setTimeout(window.location.href= '/', 2000)
+        }).catch((resp) => {
+            console.log("Failed")
+            localStorage.clear();
+            setTimeout(window.location.href= '/', 2000)
+        })
     }, []);
     return (
         <div></div>
