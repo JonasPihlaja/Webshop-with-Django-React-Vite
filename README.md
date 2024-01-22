@@ -1,5 +1,7 @@
 # React + Vite + Django
 
+## This is a sample webshop where users are able to sell, buy and update products.
+
 ## Dependencies
 
 To get this project working you will need to install the frontend dependencies from ./frontend/package.json and the backend dependencies from ./sellersmarket/requirements.txt
